@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>중2 동아(이병민) 영어 5~8과 종합 학습 시스템</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --primary-dark: #357abd;
+            --secondary: #f5f7fa;
+            --text-main: #333333;
+            --text-sub: #666666;
+            --accent: #ff6b6b;
+            --border: #e1e4e8;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 상단 네비게이션 탭 */
+        nav {
+            background-color: #2c3e50;
+            display: flex;
+            justify-content: center;
+            padding: 12px 10px;
+            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            background-color: #34495e;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        nav button.active, nav button:hover {
+            background-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* 메인 컨테이너 영역 */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-view {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-view.active {
+            display: flex;
+        }
+
+        /* 카드 공통 스타일 (단어/숙어/문법/문제) */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+            position: relative;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid var(--border);
+        }
+
+        /* 상단 진행 정보 */
+        .card-header-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        /* 단어/숙어 카드 스타일 */
+        .vocab-word-area {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .vocab-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .vocab-pos {
+            display: inline-block;
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .vocab-mean {
+            font-size: 18px;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .vocab-desc {
+            background-color: #fafbfc;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+            text-align: left;
+        }
+
+        .vocab-examples {
+            text-align: left;
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .vocab-examples p {
+            margin-bottom: 4px;
+        }
+
+        .vocab-examples .eng {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .vocab-examples .kor {
+            color: #666;
+            font-size: 13px;
+        }
+
+        /* 오디오 듣기 버튼 */
+        .audio-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .audio-btn:hover {
+            background-color: #219653;
+        }
+
+        /* 문법 카드 스타일 */
+        .grammar-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            border-left: 5px solid #e67e22;
+            padding-left: 10px;
+        }
+
+        .grammar-desc {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .grammar-example-box {
+            background: #fff8f0;
+            border: 1px solid #fce8d5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .grammar-example-box h4 {
+            color: #d35400;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        /* 문제 카드 스타일 */
+        .quiz-question {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .quiz-options {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .quiz-options li {
+            background: #f8f9fa;
+            border: 1px solid var(--border);
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .quiz-options li:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+        .quiz-options li.selected {
+            background: #e3f2fd;
+            border-color: var(--primary);
+            color: var(--primary-dark);
+            font-weight: bold;
+        }
+
+        .quiz-options li.correct {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .quiz-options li.incorrect {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        .quiz-explanation {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #334155;
+            display: none;
+            margin-top: 10px;
+        }
+
+        .check-answer-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            align-self: flex-start;
+        }
+
+        .check-answer-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* 하단 컨트롤러 (이전/다음 및 자동넘김) */
+        .card-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ctrl-btn {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e0;
+            color: #4a5568;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .ctrl-btn:hover:not(:disabled) {
+            background-color: #edf2f7;
+            color: #2d3748;
+        }
+
+        .ctrl-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .auto-play-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auto-play-btn {
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .auto-play-btn.playing {
+            background-color: #c0392b;
+        }
+
+        .speed-select {
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e0;
+            font-size: 12px;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* 반응형 디자인 */
+        @media(max-width: 600px) {
+            .card {
+                padding: 15px;
+                min-height: 380px;
+            }
+            .vocab-title {
+                font-size: 26px;
+            }
+            .card-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .auto-play-area {
+                width: 100%;
+                justify-content: center;
+            }
+            .nav-btns {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <button class="tab-btn active" onclick="switchTab('vocab')">단어 (Vocabulary)</button>
+        <button class="tab-btn" onclick="switchTab('idiom')">숙어 (Idioms)</button>
+        <button class="tab-btn" onclick="switchTab('grammar')">문법 (Grammar)</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">실전 문제 (Quiz)</button>
+    </nav>
+
+    <div class="container">
+
+        <div id="vocab-section" class="section-view active">
+            <div class="card" id="vocab-card">
+                <div>
+                    <div class="card-header-info">
+                        <span id="vocab-lesson">Lesson 5</span>
+                        <span id="vocab-counter">1 / 8</span>
+                    </div>
+                    <div class="vocab-word-area">
+                        <div class="vocab-title" id="vocab-text">reduce</div>
+                        <div class="vocab-pos" id="vocab-pos">동사</div>
+                        <div class="vocab-mean" id="vocab-mean">줄이다, 감축하다</div>
+                        <div class="vocab-desc" id="vocab-desc">어떤 것의 양, 크기, 수 등을 줄이거나 낮추다.</div>
+                        <button class="audio-btn" onclick="speakCurrentWord('vocab')">🔊 원어민 발음 듣기</button>
+                    </div>
+                    <div class="vocab-examples">
+                        <p class="eng" id="vocab-ex-eng">• What can I do to reduce plastic waste?</p>
+                        <p class="kor" id="vocab-ex-kor">플라스틱 쓰레기를 줄이기 위해 내가 무엇을 할 수 있나요?</p>
+                    </div>
+                </div>
+                <div class="card-controls">
+                    <div class="nav-btns">
+                        <button class="ctrl-btn" onclick="moveCard('vocab', -1)">◀ 이전 단어</button>
+                        <button class="ctrl-btn" onclick="moveCard('vocab', 1)">다음 단어 ▶</button>
+                    </div>
+                    <div class="auto-play-area">
+                        <select class="speed-select" id="vocab-speed">
+                            <option value="4000">4초 간격</option>
+                            <option value="6000" selected>6초 간격</option>
+                            <option value="8000">8초 간격</option>
+                        </select>
+                        <button class="auto-play-btn" id="vocab-auto-btn" onclick="toggleAutoPlay('vocab')">▶ 자동 넘김</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="idiom-section" class="section-view">
+            <div class="card" id="idiom-card">
+                <div>
+                    <div class="card-header-info">
+                        <span id="idiom-lesson">Lesson 7</span>
+                        <span id="idiom-counter">1 / 6</span>
+                    </div>
+                    <div class="vocab-word-area">
+                        <div class="vocab-title" id="idiom-text" style="font-size:28px;">break a leg</div>
+                        <div class="vocab-pos" id="idiom-pos">숙어 (Idiom)</div>
+                        <div class="vocab-mean" id="idiom-mean">행운을 빌어!</div>
+                        <div class="vocab-desc" id="idiom-desc">연극이나 공연 등의 무대에 오르는 연기자에게 행운을 빌어줄 때 쓰는 표현.</div>
+                        <button class="audio-btn" onclick="speakCurrentWord('idiom')">🔊 원어민 발음 듣기</button>
+                    </div>
+                    <div class="vocab-examples">
+                        <p class="eng" id="idiom-ex-eng">• Her friend smiled and said, "Break a leg!"</p>
+                        <p class="kor" id="idiom-ex-kor">그의 친구가 미소를 지으며 "행운을 빌어!"라고 말했다.</p>
+                    </div>
+                </div>
+                <div class="card-controls">
+                    <div class="nav-btns">
+                        <button class="ctrl-btn" onclick="moveCard('idiom', -1)">◀ 이전 숙어</button>
+                        <button class="ctrl-btn" onclick="moveCard('idiom', 1)">다음 숙어 ▶</button>
+                    </div>
+                    <div class="auto-play-area">
+                        <select class="speed-select" id="idiom-speed">
+                            <option value="4000">4초 간격</option>
+                            <option value="6000" selected>6초 간격</option>
+                            <option value="8000">8초 간격</option>
+                        </select>
+                        <button class="auto-play-btn" id="idiom-auto-btn" onclick="toggleAutoPlay('idiom')">▶ 자동 넘김</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="grammar-section" class="section-view">
+            <div class="card" id="grammar-card">
+                <div>
+                    <div class="card-header-info">
+                        <span id="grammar-lesson">Lesson 5</span>
+                        <span id="grammar-counter">1 / 5</span>
+                    </div>
+                    <div class="grammar-title" id="grammar-title-text">1. 가주어 - 진주어 구문 (It ~ to부정사)</div>
+                    <div class="grammar-desc" id="grammar-desc-text">
+                        문장이 너무 길어지는 것을 피하기 위해 주어 자리에 형식적인 주어 <strong>It</strong>을 쓰고, 진짜 주어인 <strong>to부정사구</strong>는 문장 뒤로 보냅니다. 이때 It은 해석하지 않습니다.
+                    </div>
+                    <div class="grammar-example-box">
+                        <h4>[핵심 예문]</h4>
+                        <p class="eng" id="grammar-ex-eng" style="font-weight:bold; color:#2c3e50; margin-bottom:5px;">• It is important to do our part for Venice.</p>
+                        <p class="kor" id="grammar-ex-kor" style="color:#666; font-size:13px;">베니스를 위해 우리의 역할을 하는 것은 중요합니다.</p>
+                    </div>
+                </div>
+                <div class="card-controls">
+                    <div class="nav-btns">
+                        <button class="ctrl-btn" onclick="moveCard('grammar', -1)">◀ 이전 문법</button>
+                        <button class="ctrl-btn" onclick="moveCard('grammar', 1)">다음 문법 ▶</button>
+                    </div>
+                    <div class="auto-play-area">
+                        <select class="speed-select" id="grammar-speed">
+                            <option value="5000">5초 간격</option>
+                            <option value="7000" selected>7초 간격</option>
+                            <option value="10000">10초 간격</option>
+                        </select>
+                        <button class="auto-play-btn" id="grammar-auto-btn" onclick="toggleAutoPlay('grammar')">▶ 자동 넘김</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="quiz-section" class="section-view">
+            <div class="card" id="quiz-card">
+                <div>
+                    <div class="card-header-info">
+                        <span id="quiz-lesson">Lesson 5~8 종합</span>
+                        <span id="quiz-counter">문제 1 / 6</span>
+                    </div>
+                    <div class="quiz-question" id="quiz-q-text">다음 밑줄 친 단어의 의미로 가장 적절한 것은?<br><span style="font-weight:normal; font-size:14px; color:#555;">The Quebec Winter Carnival is usually <u>held</u> for 10 days.</span></div>
+                    <ul class="quiz-options" id="quiz-options-list">
+                        </ul>
+                    <button class="check-answer-btn" id="quiz-submit-btn" onclick="checkQuizAnswer()">정답 확인</button>
+                    <div class="quiz-explanation" id="quiz-explanation-box">
+                        <strong>[해설]</strong><br><span id="quiz-exp-text">정답은 ②번입니다. be held는 '(행사 등이) 개최되다, 열리다'라는 뜻입니다.</span>
+                    </div>
+                </div>
+                <div class="card-controls">
+                    <div class="nav-btns">
+                        <button class="ctrl-btn" onclick="moveCard('quiz', -1)">◀ 이전 문제</button>
+                        <button class="ctrl-btn" onclick="moveCard('quiz', 1)">다음 문제 ▶</button>
+                    </div>
+                    <div style="font-size: 12px; color: #718096; display:flex; align-items:center;">
+                        문제를 풀고 정답을 확인하세요!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 데이터셋 정의 (중2 동아 이병민 5~8과 핵심 내용 반영)
+        const vocabData = [
+            { lesson: "Lesson 5", word: "reduce", pos: "동사", mean: "줄이다, 감축하다", desc: "어떤 것의 양, 크기, 수 등을 줄이거나 낮추다.", exEng: "What can I do to reduce plastic waste?", exKor: "플라스틱 쓰레기를 줄이기 위해 내가 무엇을 할 수 있나요?" },
+            { lesson: "Lesson 5", word: "global warming", pos: "명사", mean: "지구 온난화", desc: "지구 표면의 평균 온도가 상승하는 현상.", exEng: "We need to save energy to slow down global warming.", exKor: "우리는 지구 온난화를 늦추기 위해 에너지를 절약해야 합니다." },
+            { lesson: "Lesson 5", word: "upcycling", pos: "명사", mean: "새활용 (업사이클링)", desc: "버려지는 제품에 디자인이나 활용성을 더해 가치 있는 제품으로 재탄생시키는 것.", exEng: "We can make new things from old things. It's called upcycling.", exKor: "우리는 오래된 것으로부터 새로운 것을 만들 수 있습니다. 이를 업사이클링이라고 합니다." },
+            { lesson: "Lesson 6", word: "energy", pos: "명사", mean: "에너지, 활기", desc: "활동을 하는 데 필요한 힘이나 활력.", exEng: "Each member has a special energy.", exKor: "각 멤버는 특별한 에너지를 가지고 있습니다." },
+            { lesson: "Lesson 6", word: "stress", pos: "명사/동사", mean: "스트레스, 스트레스를 주다", desc: "정신적이나 신체적으로 긴장하게 만드는 원인이나 상태.", exEng: "I feel stressed about the exams next week.", exKor: "나는 다음 주 시험에 대해 스트레스를 느낀다." },
+            { lesson: "Lesson 7", word: "reveal", pos: "동사", mean: "(비밀 등을) 드러내다, 밝히다", desc: "숨겨져 있던 사실이나 정보를 알 수 있게 하다.", exEng: "It means to reveal a secret.", exKor: "그것은 비밀을 누설하다[드러내다]라는 뜻입니다." },
+            { lesson: "Lesson 7", word: "earworm", pos: "명사", mean: "귓속에 맴도는 노래", desc: "머릿속에서 자꾸 반복되어 떠나지 않는 노래.", exEng: "Oh, you have an earworm.", exKor: "오, 너는 귓가에 맴도는 노래가 있구나." },
+            { lesson: "Lesson 8", word: "mascot", pos: "명사", mean: "마스코트", desc: "행운을 가져온다고 믿어 축제나 단체의 상징으로 삼는 인형이나 동물.", exEng: "I am Bonhomme, the mascot of the carnival.", exKor: "나는 카니발의 마스코트인 봉옴입니다." }
+        ];
+
+        const idiomData = [
+            { lesson: "Lesson 7", word: "break a leg", pos: "숙어 (Idiom)", mean: "행운을 빌어!", desc: "연극이나 공연 등의 무대에 오르는 연기자에게 행운을 빌어줄 때 쓰는 관용구.", exEng: "Her friend smiled and said, \"Break a leg!\"", exKor: "그의 친구가 미소를 지으며 \"행운을 빌어!\"라고 말했다." },
+            { lesson: "Lesson 7", word: "spill the beans", pos: "숙어 (Idiom)", mean: "비밀을 누설하다", desc: "참지 못하고 숨겨두었던 비밀이나 정보를 말해버리다.", exEng: "Don't spill the beans about the surprise party.", exKor: "서프라이즈 파티에 대해 비밀을 누설하지 마." },
+            { lesson: "Lesson 7", word: "take a rain check", pos: "숙어 (Idiom)", mean: "(제안을 나중으로) 미루다", desc: "정중하게 거절하면서 다음 기회로 미루고 싶다고 의사를 표현할 때 사용.", exEng: "I'm sorry, but I have to take a rain check.", exKor: "미안하지만, 다음에 하자(나중에 기약하자)." },
+            { lesson: "Lesson 8", word: "look forward to", pos: "숙어", mean: "~을 학수고대하다, 기대하다", desc: "다가올 일을 즐거운 마음으로 간절히 기다리다.", exEng: "I'm really looking forward to tasting them.", exKor: "나는 그것들을 맛보는 것을 정말 기대하고 있어." },
+            { lesson: "Lesson 6", word: "money doesn't grow on trees", pos: "속담", mean: "돈은 쉽게 벌리지 않는다", desc: "돈은 쓰기 쉽지만 벌기는 매우 힘들다는 뜻의 표현.", exEng: "Remember that money doesn't grow on trees.", exKor: "돈은 쉽게 생기는 것이 아니라는 것을 기억해라." },
+            { lesson: "Lesson 5", word: "do one's part", pos: "숙어", mean: "자기 역할을 다하다", desc: "어떤 공동의 목표를 위해 자신이 맡은 바 책임을 다하다.", exEng: "It is important to do our part for Venice.", exKor: "베니스를 위해 우리의 역할을 다하는 것은 중요합니다." }
+        ];
+
+        const grammarData = [
+            { lesson: "Lesson 5", title: "1. 가주어 - 진주어 구문 (It ~ to부정사)", desc: "문장이 길어질 때 주어 자리에 형식적인 주어 <strong>It</strong>을 쓰고, 진짜 주어인 <strong>to부정사구</strong>를 뒤로 보냅니다.", exEng: "• It is important to do our part for Venice.", exKor: "베니스를 위해 우리의 역할을 하는 것은 중요합니다." },
+            { lesson: "Lesson 5", title: "2. the + 비교급 ~, the + 비교급 ...", desc: "'~하면 할수록 더욱 …하다'라는 의미로, 두 가지 변화가 비례해서 일어날 때 사용합니다.", exEng: "• The warmer the Earth gets, the higher the water rises.", exKor: "지구가 따뜻해질수록, 물은 더욱 높이 상승합니다." },
+            { lesson: "Lesson 6", title: "3. each / every + 단수명사 (단수동사)", desc: "each나 every 뒤에는 항상 <strong>단수명사</strong>가 오며, 문장의 주어로 쓰일 때 동사도 <strong>단수동사</strong>를 씁니다.", exEng: "• Each member has a special energy.", exKor: "각각의 멤버는 특별한 에너지를 가지고 있습니다." },
+            { lesson: "Lesson 7", title: "4. 목적격 관계대명사 (that / which / who)", desc: "선행사가 사람/사물일 때 절을 이끌며 목적어 역할을 대신하며, 목적격 관계대명사는 종종 생략할 수 있습니다.", exEng: "• A rain check was a ticket that people got.", exKor: "레인 체크는 사람들이 얻었던 티켓이었다." },
+            { lesson: "Lesson 8", title: "5. 의문사 + to부정사", desc: "'의문사(how, what, where 등) + to부정사' 형태로 '~해야 할지'라는 의미를 나타내며 명사처럼 쓰입니다.", exEng: "• I can teach you how to dance like me.", exKor: "나는 너에게 나와 같이 춤추는법을 가르쳐 줄 수 있어." }
+        ];
+
+        const quizData = [
+            {
+                lesson: "Lesson 5",
+                question: "다음 밑줄 친 단어의 의미로 가장 적절한 것은?<br><span style='font-size:14px; font-weight:normal;'>The Quebec Winter Carnival is usually <u>held</u> for 10 days.</span>",
+                options: ["① 붙잡다", "② 열리다, 개최되다", "③ 멈추다", "④ 지탱하다", "⑤ 바라보다"],
+                answer: 1,
+                explanation: "be held는 '(행사 등이) 개최되다, 열리다'라는 뜻입니다."
+            },
+            {
+                lesson: "Lesson 5",
+                question: "다음 문장의 빈칸에 알맞은 접속사는?<br><span style='font-size:14px; font-weight:normal;'>________ Sarah was disappointed, she understood Emily's situation.</span>",
+                options: ["① Because", "② Although", "③ If", "④ Unless", "⑤ Since"],
+                answer: 1,
+                explanation: "'비록 ~이지만'이라는 양보의 의미를 나타내는 접속사 Although가 정답입니다."
+            },
+            {
+                lesson: "Lesson 6",
+                question: "다음 중 어법상 올바른 문장을 고르시오.",
+                options: ["① Each member have a special energy.", "② Every students will get a money diary.", "③ Each of the boys has a dream.", "④ Every members work hard.", "⑤ Each girl take a selfie."],
+                answer: 2,
+                explanation: "Each of + 복수명사 주어는 단수 취급하므로 동사로 단수형 'has'가 오는 ③번이 올바릅니다."
+            },
+            {
+                lesson: "Lesson 7",
+                question: "영어 관용구 \"<u>spill the beans</u>\"의 올바른 의미는?",
+                options: ["① 콩을 쏟다", "② 농담을 하다", "③ 비밀을 누설하다", "④ 행운을 빌다", "⑤ 약속을 미루다"],
+                answer: 2,
+                explanation: "'spill the beans'는 숨겨두었던 비밀이나 정보를 말해버리다(비밀을 누설하다)라는 뜻입니다."
+            },
+            {
+                lesson: "Lesson 8",
+                question: "다음 대화의 빈칸에 들어갈 말로 가장 적절한 것은?<br><span style='font-size:14px; font-weight:normal;'>G: I'm really ____________________ tasting the roasted marshmallows.</span>",
+                options: ["① looking forward to", "② tired of", "③ worried about", "④ good at", "⑤ surprised at"],
+                answer: 0,
+                explanation: "'be looking forward to + 명사/동명사(-ing)'는 '~을 학수고대하다, 기대하다'라는 뜻입니다."
+            },
+            {
+                lesson: "Lesson 5~8 종합",
+                question: "다음 중 두 문장의 의미가 서로 짝지어진 것으로 어색한 것은?",
+                options: ["① It is important to exercise. = Exercising is important.", "② The warmer it gets, the better I feel.", "③ How often do you walk? - Once a week.", "④ I can teach you how to dance. = I can teach you how can I dance.", "⑤ What can I do to reduce waste? - You can use reusable cups."],
+                answer: 3,
+                explanation: "의문사 + to부정사는 「의문사 + 주어 + 조동사 should + 동사원형」으로 전환하므로, ④번의 how can I dance는 어법상 틀립니다."
+            }
+        ];
+
+        // 상태 관리 변수
+        let currentIndices = { vocab: 0, idiom: 0, grammar: 0, quiz: 0 };
+        let autoPlayIntervals = { vocab: null, idiom: null, grammar: null };
+        let userSelectedAnswers = {};
+
+        // 탭 전환 함수
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.section-view').forEach(sec => sec.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(`${tabName}-section`).classList.add('active');
+
+            // 탭 이동시 자동 재생 중지
+            stopAllAutoPlays();
+        }
+
+        // 카드 이동 함수 (이전/다음)
+        function moveCard(type, direction) {
+            let dataLength = getDataLength(type);
+            currentIndices[type] += direction;
+
+            if (currentIndices[type] < 0) {
+                currentIndices[type] = dataLength - 1;
+            } else if (currentIndices[type] >= dataLength) {
+                currentIndices[type] = 0;
+            }
+
+            renderCard(type);
+        }
+
+        function getDataLength(type) {
+            if (type === 'vocab') return vocabData.length;
+            if (type === 'idiom') return idiomData.length;
+            if (type === 'grammar') return grammarData.length;
+            if (type === 'quiz') return quizData.length;
+        }
+
+        // 카드 렌더링 함수
+        function renderCard(type) {
+            const idx = currentIndices[type];
+
+            if (type === 'vocab') {
+                const item = vocabData[idx];
+                document.getElementById('vocab-lesson').innerText = item.lesson;
+                document.getElementById('vocab-counter').innerText = `${idx + 1} / ${vocabData.length}`;
+                document.getElementById('vocab-text').innerText = item.word;
+                document.getElementById('vocab-pos').innerText = item.pos;
+                document.getElementById('vocab-mean').innerText = item.mean;
+                document.getElementById('vocab-desc').innerText = item.desc;
+                document.getElementById('vocab-ex-eng').innerText = `• ${item.exEng}`;
+                document.getElementById('vocab-ex-kor').innerText = item.exKor;
+            } else if (type === 'idiom') {
+                const item = idiomData[idx];
+                document.getElementById('idiom-lesson').innerText = item.lesson;
+                document.getElementById('idiom-counter').innerText = `${idx + 1} / ${idiomData.length}`;
+                document.getElementById('idiom-text').innerText = item.word;
+                document.getElementById('idiom-pos').innerText = item.pos;
+                document.getElementById('idiom-mean').innerText = item.mean;
+                document.getElementById('idiom-desc').innerText = item.desc;
+                document.getElementById('idiom-ex-eng').innerText = `• ${item.exEng}`;
+                document.getElementById('idiom-ex-kor').innerText = item.exKor;
+            } else if (type === 'grammar') {
+                const item = grammarData[idx];
+                document.getElementById('grammar-lesson').innerText = item.lesson;
+                document.getElementById('grammar-counter').innerText = `${idx + 1} / ${grammarData.length}`;
+                document.getElementById('grammar-title-text').innerText = item.title;
+                document.getElementById('grammar-desc-text').innerHTML = item.desc;
+                document.getElementById('grammar-ex-eng').innerText = item.exEng;
+                document.getElementById('grammar-ex-kor').innerText = item.exKor;
+            } else if (type === 'quiz') {
+                const item = quizData[idx];
+                document.getElementById('quiz-lesson').innerText = item.lesson;
+                document.getElementById('quiz-counter').innerText = `문제 ${idx + 1} / ${quizData.length}`;
+                document.getElementById('quiz-q-text').innerHTML = item.question;
+                
+                const optList = document.getElementById('quiz-options-list');
+                optList.innerHTML = '';
+                
+                item.options.forEach((opt, oIdx) => {
+                    const li = document.createElement('li');
+                    li.innerText = opt;
+                    li.onclick = () => selectQuizOption(idx, oIdx);
+                    
+                    if (userSelectedAnswers[idx] === oIdx) {
+                        li.classList.add('selected');
+                    }
+                    optList.appendChild(li);
+                });
+
+                const expBox = document.getElementById('quiz-explanation-box');
+                const submitBtn = document.getElementById('quiz-submit-btn');
+                
+                if (userSelectedAnswers[idx] !== undefined) {
+                    expBox.style.display = 'block';
+                    document.getElementById('quiz-exp-text').innerText = item.explanation;
+                    submitBtn.style.display = 'none';
+                } else {
+                    expBox.style.display = 'none';
+                    submitBtn.style.display = 'inline-block';
+                }
+            }
+        }
+
+        // 퀴즈 보기 선택
+        function selectQuizOption(qIdx, oIdx) {
+            userSelectedAnswers[qIdx] = oIdx;
+            renderCard('quiz');
+        }
+
+        // 퀴즈 정답 확인 버튼
+        function checkQuizAnswer() {
+            const idx = currentIndices['quiz'];
+            if (userSelectedAnswers[idx] === undefined) {
+                alert("보기를 먼저 선택해주세요!");
+                return;
+            }
+            renderCard('quiz');
+        }
+
+        // Web Speech API 원어민 발음 재생
+        function speakCurrentWord(type) {
+            const idx = currentIndices[type];
+            let textToSpeak = "";
+            if (type === 'vocab') textToSpeak = vocabData[idx].word;
+            if (type === 'idiom') textToSpeak = idiomData[idx].word;
+
+            if ('speechSynthesis' in window && textToSpeak) {
+                window.speechSynthesis.cancel(); // 이전 재생 취소
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9; // 약간 천천히 중2 학습용
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("이 브라우저는 음성 재생을 지원하지 않습니다.");
+            }
+        }
+
+        // 자동 넘김 기능 구현
+        function toggleAutoPlay(type) {
+            const btn = document.getElementById(`${type}-auto-btn`);
+            const speedSelect = document.getElementById(`${type}-speed`);
+
+            if (autoPlayIntervals[type]) {
+                // 중지
+                clearInterval(autoPlayIntervals[type]);
+                autoPlayIntervals[type] = null;
+                btn.classList.remove('playing');
+                btn.innerText = '▶ 자동 넘김';
+                speedSelect.disabled = false;
+            } else {
+                // 시작
+                const intervalTime = parseInt(speedSelect.value);
+                btn.classList.add('playing');
+                btn.innerText = '⏸ 정지';
+                speedSelect.disabled = true;
+
+                autoPlayIntervals[type] = setInterval(() => {
+                    moveCard(type, 1);
+                    // 단어/숙어의 경우 자동 넘김시 발음도 같이 재생해주면 학습 효과 증대
+                    if (type === 'vocab' || type === 'idiom') {
+                        speakCurrentWord(type);
+                    }
+                }, intervalTime);
+            }
+        }
+
+        function stopAllAutoPlays() {
+            ['vocab', 'idiom', 'grammar'].forEach(type => {
+                if (autoPlayIntervals[type]) {
+                    clearInterval(autoPlayIntervals[type]);
+                    autoPlayIntervals[type] = null;
+                    const btn = document.getElementById(`${type}-auto-btn`);
+                    const speedSelect = document.getElementById(`${type}-speed`);
+                    if(btn) {
+                        btn.classList.remove('playing');
+                        btn.innerText = '▶ 자동 넘김';
+                    }
+                    if(speedSelect) speedSelect.disabled = false;
+                }
+            });
+        }
+
+        // 키보드 방향키 연동 (좌우 화살표로 카드 넘기기)
+        document.addEventListener('keydown', (e) => {
+            let activeTab = document.querySelector('.section-view.active').id.split('-')[0];
+            if (activeTab === 'quiz') return; // 퀴즈는 화살표 넘김 제외
+
+            if (e.key === 'ArrowLeft') {
+                moveCard(activeTab, -1);
+                if (activeTab === 'vocab' || activeTab === 'idiom') speakCurrentWord(activeTab);
+            } else if (e.key === 'ArrowRight') {
+                moveCard(activeTab, idx => idx); // 임시
+                moveCard(activeTab, 1);
+                if (activeTab === 'vocab' || activeTab === 'idiom') speakCurrentWord(activeTab);
+            }
+        });
+
+        // 초기 렌더링 실행
+        renderCard('vocab');
+        renderCard('idiom');
+        renderCard('grammar');
+        renderCard('quiz');
+    </script>
+</body>
+</html>
