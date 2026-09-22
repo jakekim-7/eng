@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>중2 동아(이병민) 영어 통합 마스터 클래스 (1~8과)</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --bg-main: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-sub: #475569;
+            --border: #cbd5e1;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --radius: 16px;
+        }
+
+        [data-theme="dark"] {
+            --bg-main: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: #334155;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; transition: 0.3s; }
+
+        header {
+            background: var(--card-bg); border-bottom: 1px solid var(--border);
+            padding: 12px 20px; position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 17px; font-weight: 800; color: var(--primary); }
+        .controls { display: flex; gap: 8px; align-items: center; }
+        select, button.btn-icon {
+            background: var(--bg-main); color: var(--text-main); border: 1px solid var(--border);
+            padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+        }
+
+        nav {
+            background: var(--card-bg); display: flex; justify-content: center; gap: 4px;
+            padding: 8px 10px; border-bottom: 1px solid var(--border); overflow-x: auto;
+        }
+        .nav-btn {
+            background: transparent; border: none; color: var(--text-sub);
+            padding: 8px 14px; font-size: 13px; font-weight: 700; border-radius: 10px; cursor: pointer; white-space: nowrap;
+        }
+        .nav-btn.active { background: var(--primary); color: white; }
+
+        main { flex: 1; max-width: 760px; width: 100%; margin: 16px auto; padding: 0 12px; }
+        .tab-content { display: none; flex-direction: column; gap: 12px; }
+        .tab-content.active { display: flex; }
+
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 24px; box-shadow: var(--shadow); min-height: 420px; display: flex;
+            flex-direction: column; justify-content: space-between; position: relative;
+        }
+
+        .card-top { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700; color: var(--text-sub); }
+        .badge { background: rgba(37, 99, 235, 0.1); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+        .star { font-size: 20px; cursor: pointer; color: #cbd5e1; }
+        .star.active { color: var(--accent); }
+
+        .center-body { text-align: center; margin: 15px 0; }
+        .main-title { font-size: 32px; font-weight: 900; margin-bottom: 6px; }
+        .sub-tag { display: inline-block; background: #e0e7ff; color: #3730a3; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; margin-bottom: 10px; }
+        .meaning { font-size: 20px; font-weight: 800; color: var(--danger); margin-bottom: 12px; }
+        .desc-box { background: var(--bg-main); border-left: 4px solid var(--primary); padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 13px; text-align: left; line-height: 1.5; margin-bottom: 14px; }
+        .ex-box { background: var(--bg-main); border: 1px solid var(--border); padding: 12px; border-radius: 10px; text-align: left; font-size: 13px; }
+        .ex-eng { font-weight: 700; margin-bottom: 2px; }
+        .ex-kor { color: var(--text-sub); }
+
+        .card-controls { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border); padding-top: 12px; }
+        .row-btn { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; }
+        .btn-sec { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border); }
+
+        /* Quiz Specific */
+        .quiz-opt { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+        .opt-btn { background: var(--bg-main); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; text-align: left; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .opt-btn.correct { background: #dcfce7 !important; border-color: #22c55e !important; color: #15803d !important; }
+        .opt-btn.wrong { background: #fee2e2 !important; border-color: #ef4444 !important; color: #b91c1c !important; }
+        .subjective-input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-main); color: var(--text-main); font-size: 14px; margin: 10px 0; }
+        .exp-box { background: var(--bg-main); border-top: 3px solid var(--primary); padding: 10px; font-size: 12px; display: none; line-height: 1.4; }
+
+        /* Report & Note */
+        .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px; }
+        .stat-card { background: var(--bg-main); padding: 14px; border-radius: 10px; text-align: center; }
+        .stat-num { font-size: 22px; font-weight: 900; color: var(--primary); }
+
+        footer { text-align: center; padding: 12px; font-size: 11px; color: var(--text-sub); border-top: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">동아(이병민) 통합 마스터</div>
+        <div class="controls">
+            <select id="lessonFilter" onchange="applyFilter()">
+                <option value="ALL">전체 (1~8과)</option>
+                <option value="Lesson 1">Lesson 1</option>
+                <option value="Lesson 2">Lesson 2</option>
+                <option value="Lesson 3">Lesson 3</option>
+                <option value="Lesson 4">Lesson 4</option>
+                <option value="Lesson 5">Lesson 5</option>
+                <option value="Lesson 6">Lesson 6</option>
+                <option value="Lesson 7">Lesson 7</option>
+                <option value="Lesson 8">Lesson 8</option>
+            </select>
+            <button class="btn-icon" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" onclick="switchTab('vocab')">🔤 단어·숙어</button>
+        <button class="nav-btn" onclick="switchTab('grammar')">📘 핵심 문법</button>
+        <button class="nav-btn" onclick="switchTab('quiz')">📝 실전 평가</button>
+        <button class="nav-btn" onclick="switchTab('note')">📌 오답·북마크</button>
+        <button class="nav-btn" onclick="switchTab('report')">📊 학습 리포트</button>
+    </nav>
+
+    <main>
+        <!-- 1. 단어/숙어 -->
+        <div id="vocab-tab" class="tab-content active">
+            <div class="card">
+                <div>
+                    <div class="card-top">
+                        <span class="badge" id="vLesson">Lesson 1</span>
+                        <span id="vProg">1 / 10</span>
+                        <span class="star" id="vStar" onclick="toggleBookmark('vocab')">★</span>
+                    </div>
+                    <div class="center-body">
+                        <div class="main-title" id="vWord">encourage</div>
+                        <div class="sub-tag" id="vPos">동사</div>
+                        <div class="meaning" id="vMeaning">격려하다, 용기를 북돋우다</div>
+                        <div class="desc-box" id="vDesc">누군가에게 용기나 신념을 주어 어떤 행동을 하도록 유도하다.</div>
+                    </div>
+                    <div class="ex-box">
+                        <div class="ex-eng" id="vExEng">My teacher encouraged me to try again.</div>
+                        <div class="ex-kor" id="vExKor">나의 선생님은 나에게 다시 시도해보라고 격려하셨다.</div>
+                    </div>
+                </div>
+                <div class="card-controls">
+                    <div class="row-btn">
+                        <button class="btn" style="background:var(--secondary);" onclick="playTTS('vocab')">🔊 발음 듣기</button>
+                        <select id="vSpeed"><option value="0.8">0.8x</option><option value="1.0" selected>1.0x</option></select>
+                    </div>
+                    <div class="row-btn">
+                        <button class="btn btn-sec" onclick="moveCard('vocab', -1)">◀ 이전</button>
+                        <button class="btn" id="vAutoBtn" onclick="toggleAuto('vocab')">▶ 자동 재생</button>
+                        <button class="btn btn-sec" onclick="moveCard('vocab', 1)">다음 ▶</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 문법 -->
+        <div id="grammar-tab" class="tab-content">
+            <div class="card">
+                <div>
+                    <div class="card-top">
+                        <span class="badge" id="gLesson">Lesson 1</span>
+                        <span id="gProg">1 / 8</span>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <div style="font-size: 18px; font-weight: 800; color: var(--primary); margin-bottom: 8px;" id="gTitle">문법 제목</div>
+                        <div class="desc-box" id="gDesc">문법 설명이 들어갑니다.</div>
+                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; padding:10px; border-radius:8px; font-weight:700; font-size:13px; margin-bottom:12px;" id="gStruct">구조 예시</div>
+                    </div>
+                    <div class="ex-box">
+                        <div class="ex-eng" id="gExEng">Example sentence</div>
+                        <div class="ex-kor" id="gExKor">예문 해석</div>
+                    </div>
+                </div>
+                <div class="card-controls">
+                    <button class="btn" style="background:var(--secondary);" onclick="playTTS('grammar')">🔊 예문 듣기</button>
+                    <div class="row-btn">
+                        <button class="btn btn-sec" onclick="moveCard('grammar', -1)">◀ 이전</button>
+                        <button class="btn btn-sec" onclick="moveCard('grammar', 1)">다음 ▶</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 실전 평가 (객관식 + 서술형) -->
+        <div id="quiz-tab" class="tab-content">
+            <div class="card" style="min-height: auto;">
+                <div>
+                    <div class="card-top">
+                        <span class="badge" id="qLesson">Lesson 1</span>
+                        <span id="qProg">문제 1 / 10</span>
+                    </div>
+                    <div style="font-size: 15px; font-weight: 800; margin: 12px 0;" id="qQuest">질문 내용</div>
+                    
+                    <!-- 객관식 보기 -->
+                    <div class="quiz-opt" id="qOpts"></div>
+
+                    <!-- 서술형 입력창 -->
+                    <div id="subjArea" style="display:none;">
+                        <input type="text" class="subjective-input" id="subjInput" placeholder="정답을 입력하세요 (영문/단어)">
+                    </div>
+
+                    <button class="btn" style="width: 100%; margin-top: 6px;" onclick="checkAnswer()">정답 확인 & 제출</button>
+                    <div class="exp-box" id="qExp">
+                        <strong>[해설]</strong> <span id="qExpText"></span>
+                    </div>
+                </div>
+                <div class="card-controls" style="margin-top:15px;">
+                    <div class="row-btn">
+                        <button class="btn btn-sec" onclick="moveCard('quiz', -1)">◀ 이전 문제</button>
+                        <button class="btn btn-sec" onclick="moveCard('quiz', 1)">다음 문제 ▶</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. 오답노트 & 북마크 -->
+        <div id="note-tab" class="tab-content">
+            <div class="card" style="min-height: auto;">
+                <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 10px;">📌 저장된 북마크 & 오답 목록</h3>
+                <div id="noteList" style="display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto;">
+                    <!-- 동적 생성 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. 학습 리포트 -->
+        <div id="report-tab" class="tab-content">
+            <div class="card" style="min-height: auto;">
+                <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">📊 나만의 학습 통계</h3>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-num" id="statQuiz">0/0</div>
+                        <div style="font-size: 12px; color: var(--text-sub);">풀은 문제 수</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" id="statAcc">0%</div>
+                        <div style="font-size: 12px; color: var(--text-sub);">평균 정답률</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" id="statBm">0개</div>
+                        <div style="font-size: 12px; color: var(--text-sub);">북마크 단어</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" id="statWrong">0개</div>
+                        <div style="font-size: 12px; color: var(--text-sub);">오답 관리 항목</div>
+                    </div>
+                </div>
+                <button class="btn" style="background: var(--danger);" onclick="resetData()">데이터 초기화</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        2022개정 중2 동아(이병민) 영어 1~8과 전 과정 통합 학습 앱
+    </footer>
+
+    <script>
+        /* 데이터베이스 (1~8과 단어, 문법, 객관식, 서술형 통합) */
+        const vocabData = [
+            { lesson: "Lesson 1", word: "encourage", pos: "동사", meaning: "격려하다, 용기를 북돋우다", desc: "누군가에게 용기를 주어 행동하게 만들다.", exEng: "My teacher encouraged me to try again.", exKor: "선생님은 내가 다시 시도하도록 격려하셨다." },
+            { lesson: "Lesson 2", word: "experience", pos: "명사/동사", meaning: "경험, 경험하다", desc: "자신이 직접 겪거나 경험한 일.", exEng: "Traveling brings us valuable experiences.", exKor: "여행은 우리에게 귀중한 경험을 가져다준다." },
+            { lesson: "Lesson 3", word: "environment", pos: "명사", meaning: "환경", desc: "인간이나 생물이 살아가는 자연적 조건.", exEng: "We must protect our environment.", exKor: "우리는 우리의 환경을 보호해야만 한다." },
+            { lesson: "Lesson 4", word: "tradition", pos: "명사", meaning: "전통", desc: "세대에서 세대로 전해 내려오는 관습이나 문화.", exEng: "They keep their family tradition alive.", exKor: "그들은 자신들의 가문 전통을 이어나가고 있다." },
+            { lesson: "Lesson 5", word: "upcycling", pos: "명사", meaning: "새활용 (업사이클링)", desc: "버려지는 재료를 새로 디자인해 가치를 높이는 것.", exEng: "Upcycling helps reduce waste.", exKor: "업사이클링은 쓰레기를 줄이는 데 도움을 준다." },
+            { lesson: "Lesson 6", word: "energy", pos: "명사", meaning: "에너지, 활력", desc: "일이나 활동을 수행할 수 있는 힘.", exEng: "Each member has unique energy.", exKor: "각 멤버는 독특한 에너지를 지니고 있다." },
+            { lesson: "Lesson 7", word: "spill the beans", pos: "관용구", meaning: "비밀을 누설하다", desc: "고대 그리스 투표 방식에서 유래된 관용적 표현.", exEng: "He promised not to spill the beans.", exKor: "그는 비밀을 누설하지 않기로 약속했다." },
+            { lesson: "Lesson 8", word: "look forward to", pos: "숙어", meaning: "~을 간절히 기대하다", desc: "뒤에 동명사(-ing)나 명사가 오는 핵심 표현.", exEng: "I am looking forward to seeing you.", exKor: "나는 너를 만나기를 간절히 기대하고 있다." }
+        ];
+
+        const grammarData = [
+            { lesson: "Lesson 1", title: "1. to부정사의 형용사적 용법", desc: "명사 뒤에서 명사를 수식하며 '~할'의 의미로 사용됩니다.", struct: "명사 + to + 동사원형", exEng: "I have a lot of work to do today.", exKor: "나는 오늘 해야 할 일이 많다." },
+            { lesson: "Lesson 2", title: "2. 접속사 since / as", desc: "'~이래로(시간)' 또는 '~ 때문에(이유)'를 나타내는 접속사입니다.", struct: "since / as + 주어 + 동사", exEng: "As it was raining, we stayed indoors.", exKor: "비가 오고 있었기 때문에 우리는 실내에 머물렀다." },
+            { lesson: "Lesson 3", title: "3. 원교급 / 비교급 / 최상급", desc: "형용사나 부사의 형태를 바꾸어 비교를 나타냅니다.", struct: "as + 원급 + as | 비교급 + than", exEng: "Math is as important as English.", exKor: "수학은 영어만큼 중요하다." },
+            { lesson: "Lesson 4", title: "4. 동명사 주어와 단수취급", desc: "동명사구(~하는 것)가 주어로 오면 단수 동사(is/has 등)로 받습니다.", struct: "동사-ing ... + 단수동사", exEng: "Eating healthy food keeps you well.", exKor: "건강한 음식을 먹는 것은 건강을 유지해준다." },
+            { lesson: "Lesson 5", title: "5. 가주어 It - 진주어 to부정사", desc: "긴 주어를 피하기 위해 형식상 It을 쓰고 to부정사를 뒤로 보냅니다.", struct: "It is + 형용사 + to + 동사원형", exEng: "It is easy to make a mistake.", exKor: "실수를 하는 것은 쉽다." },
+            { lesson: "Lesson 6", title: "6. each / every + 단수명사", desc: "each와 every 뒤에는 단수명사가 오며 주어로 쓰일 때 단수 취급합니다.", struct: "each / every + 단수명사 + 단수동사", exEng: "Every student has a textbook.", exKor: "모든 학생은 교과서를 가지고 있다." },
+            { lesson: "Lesson 7", title: "7. 접속사 Although / Even though", desc: "'비록 ~일지라도'라는 양보의 뜻을 나타냅니다.", struct: "Although + 주어 + 동사, 주어 + 동사", exEng: "Although it was cold, we went out.", exKor: "날씨가 추웠음에도 불구하고 우리는 나갔다." },
+            { lesson: "Lesson 8", title: "8. 의문사 + to부정사 & so ~ that", desc: "how to(~하는 법), so A that B(너무 A해서 B하다) 구문입니다.", struct: "so + 형용사/부사 + that + 주어 + 동사", exEng: "The movie was so fun that I watched it twice.", exKor: "그 영화는 너무 재미있어서 나는 두 번 보았다." }
+        ];
+
+        const quizData = [
+            { lesson: "Lesson 1", type: "mc", quest: "다음 빈칸에 들어갈 알맞은 말은?<br><i>I need some paper to write _____.</i>", opts: ["① on", "② with", "③ to", "④ in", "⑤ at"], ans: 0, exp: "종이 위에 글을 쓰므로 전치사 on이 필요합니다. (write on paper)" },
+            { lesson: "Lesson 3", type: "mc", quest: "두 문장의 뜻이 같도록 빈칸에 알맞은 원급 구문을 고르시오.<br><i>Tom is 170cm. Sam is 170cm. → Tom is ________ Sam.</i>", opts: ["① taller than", "② as tall as", "③ the tallest", "④ as short as", "⑤ not as tall as"], answer: 1, exp: "두 사람의 키가 같으므로 동등비교 「as + 원급 + as」 구문을 씁니다." },
+            { lesson: "Lesson 5", type: "mc", quest: "다음 문장의 가주어-진주어 전환 중 올바른 것은?<br><i>To save energy is important.</i>", opts: ["① It is important to save energy.", "② Important is it to save energy.", "③ Saving energy is to it important.", "④ To save energy it is important.", "⑤ It is to save energy important."], ans: 0, exp: "To부정사 주어를 뒤로 보내고 문두에 가주어 It을 둔 ①번이 정답입니다." },
+            { lesson: "Lesson 6", type: "subj", quest: "[서술형] 다음 괄호 안의 단어를 어법에 맞게 고쳐 쓰시오.<br><i>Each of the members (have) a unique role.</i>", ans: "has", exp: "Each of + 복수명사가 주어일 때 핵심 주어는 Each(단수)이므로 have를 has로 고쳐야 합니다." },
+            { lesson: "Lesson 8", type: "subj", quest: "[서술형] 다음 우리말을 영작할 때 빈칸에 들어갈 두 단어를 쓰시오.<br><i>\"나는 너를 다시 만나기를 기대하고 있다.\"<br>→ I am looking forward to __________ __________. (meet)</i>", ans: "meeting you", exp: "look forward to 다음에는 동명사(-ing)가 오므로 meeting이 되며 목적어 you를 함께 씁니다." }
+        ];
+
+        /* 상태 관리 */
+        let activeTab = 'vocab';
+        let filterLesson = 'ALL';
+        let idxs = { vocab: 0, grammar: 0, quiz: 0 };
+        let autoTimers = { vocab: null };
+        let userAnswers = {};
+        
+        let localData = JSON.parse(localStorage.getItem('eng_master_data') || '{"bookmarks":[],"wrong":[],"solved":0,"correct":0}');
+
+        function saveLocal() { localStorage.setItem('eng_master_data', JSON.stringify(localData)); }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(`${tab}-tab`).classList.add('active');
+            stopAuto();
+            if(tab === 'note') renderNote();
+            if(tab === 'report') renderReport();
+            render();
+        }
+
+        function applyFilter() {
+            filterLesson = document.getElementById('lessonFilter').value;
+            idxs = { vocab: 0, grammar: 0, quiz: 0 };
+            render();
+        }
+
+        function getFiltered(type) {
+            let list = type === 'vocab' ? vocabData : type === 'grammar' ? grammarData : quizData;
+            if (filterLesson === 'ALL') return list;
+            return list.filter(d => d.lesson === filterLesson);
+        }
+
+        function render() {
+            const list = getFiltered(activeTab);
+            if (!list || list.length === 0) return;
+
+            let curIdx = idxs[activeTab];
+            if (curIdx >= list.length) curIdx = 0;
+            if (curIdx < 0) curIdx = list.length - 1;
+            idxs[activeTab] = curIdx;
+
+            const item = list[curIdx];
+
+            if (activeTab === 'vocab') {
+                document.getElementById('vLesson').innerText = item.lesson;
+                document.getElementById('vProg').innerText = `${curIdx + 1} / ${list.length}`;
+                document.getElementById('vWord').innerText = item.word;
+                document.getElementById('vPos').innerText = item.pos;
+                document.getElementById('vMeaning').innerText = item.meaning;
+                document.getElementById('vDesc').innerText = item.desc;
+                document.getElementById('vExEng').innerText = item.exEng;
+                document.getElementById('vExKor').innerText = item.exKor;
+                document.getElementById('vStar').classList.toggle('active', localData.bookmarks.includes(item.word));
+            }
+            else if (activeTab === 'grammar') {
+                document.getElementById('gLesson').innerText = item.lesson;
+                document.getElementById('gProg').innerText = `${curIdx + 1} / ${list.length}`;
+                document.getElementById('gTitle').innerText = item.title;
+                document.getElementById('gDesc').innerText = item.desc;
+                document.getElementById('gStruct').innerText = `구조: ${item.struct}`;
+                document.getElementById('gExEng').innerText = item.exEng;
+                document.getElementById('gExKor').innerText = item.exKor;
+            }
+            else if (activeTab === 'quiz') {
+                document.getElementById('qLesson').innerText = item.lesson;
+                document.getElementById('qProg').innerText = `문제 ${curIdx + 1} / ${list.length}`;
+                document.getElementById('qQuest').innerHTML = item.quest;
+
+                const optBox = document.getElementById('qOpts');
+                const subjArea = document.getElementById('subjArea');
+                optBox.innerHTML = '';
+                document.getElementById('qExp').style.display = 'none';
+
+                if (item.type === 'mc') {
+                    optBox.style.display = 'flex';
+                    subjArea.style.display = 'none';
+                    item.opts.forEach((o, oIdx) => {
+                        const b = document.createElement('button');
+                        b.className = 'opt-btn';
+                        b.innerText = o;
+                        if (userAnswers[curIdx] === oIdx) b.style.borderColor = 'var(--primary)';
+                        b.onclick = () => { userAnswers[curIdx] = oIdx; render(); };
+                        optBox.appendChild(b);
+                    });
+                } else {
+                    optBox.style.display = 'none';
+                    subjArea.style.display = 'block';
+                    document.getElementById('subjInput').value = userAnswers[curIdx] || '';
+                }
+            }
+        }
+
+        function moveCard(type, dir) {
+            const list = getFiltered(type);
+            idxs[type] = (idxs[type] + dir + list.length) % list.length;
+            render();
+            if (autoTimers[type]) playTTS(type);
+        }
+
+        function playTTS(type) {
+            const list = getFiltered(type);
+            const item = list[idxs[type]];
+            const text = type === 'vocab' ? item.word : item.exEng;
+            const speed = parseFloat(document.getElementById('vSpeed')?.value || 1.0);
+
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-US';
+                u.rate = speed;
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        function toggleAuto(type) {
+            const btn = document.getElementById('vAutoBtn');
+            if (autoTimers[type]) {
+                stopAuto();
+            } else {
+                btn.innerText = '⏸ 정지';
+                playTTS(type);
+                autoTimers[type] = setInterval(() => moveCard(type, 1), 4000);
+            }
+        }
+
+        function stopAuto() {
+            if (autoTimers.vocab) {
+                clearInterval(autoTimers.vocab);
+                autoTimers.vocab = null;
+                document.getElementById('vAutoBtn').innerText = '▶ 자동 재생';
+            }
+        }
+
+        function toggleBookmark(type) {
+            const item = getFiltered(type)[idxs[type]];
+            const idx = localData.bookmarks.indexOf(item.word);
+            if (idx > -1) localData.bookmarks.splice(idx, 1);
+            else localData.bookmarks.push(item.word);
+            saveLocal();
+            render();
+        }
+
+        function checkAnswer() {
+            const list = getFiltered('quiz');
+            const curIdx = idxs['quiz'];
+            const item = list[curIdx];
+            let isCorrect = false;
+
+            if (item.type === 'mc') {
+                const userVal = userAnswers[curIdx];
+                if (userVal === undefined) { alert("보기를 선택해주세요!"); return; }
+                isCorrect = (userVal === item.ans);
+                
+                const btns = document.getElementById('qOpts').children;
+                for(let i=0; i<btns.length; i++) {
+                    if(i === item.ans) btns[i].classList.add('correct');
+                    else if(i === userVal) btns[i].classList.add('wrong');
+                }
+            } else {
+                const inputVal = document.getElementById('subjInput').value.trim();
+                userAnswers[curIdx] = inputVal;
+                isCorrect = (inputVal.toLowerCase() === item.ans.toLowerCase());
+            }
+
+            localData.solved += 1;
+            if (isCorrect) {
+                localData.correct += 1;
+            } else {
+                if(!localData.wrong.includes(item.quest)) localData.wrong.push(item.quest);
+            }
+            saveLocal();
+
+            document.getElementById('qExpText').innerHTML = (isCorrect ? "<b style='color:green;'>[정답!]</b> " : "<b style='color:red;'>[오답]</b> ") + item.exp + ` (정답: ${item.type==='mc'? item.opts[item.ans] : item.ans})`;
+            document.getElementById('qExp').style.display = 'block';
+        }
+
+        function renderNote() {
+            const box = document.getElementById('noteList');
+            box.innerHTML = '';
+            
+            if (localData.bookmarks.length === 0 && localData.wrong.length === 0) {
+                box.innerHTML = '<div style="font-size:13px; color:var(--text-sub);">저장된 북마크나 오답이 없습니다.</div>';
+                return;
+            }
+
+            localData.bookmarks.forEach(bm => {
+                const div = document.createElement('div');
+                div.className = 'ex-box';
+                div.innerHTML = `<strong>⭐ [북마크 단어]</strong> ${bm}`;
+                box.appendChild(div);
+            });
+
+            localData.wrong.forEach(w => {
+                const div = document.createElement('div');
+                div.className = 'ex-box';
+                div.style.borderColor = 'var(--danger)';
+                div.innerHTML = `<strong>❌ [오답 문제]</strong> ${w}`;
+                box.appendChild(div);
+            });
+        }
+
+        function renderReport() {
+            document.getElementById('statQuiz').innerText = `${localData.solved}문제`;
+            const acc = localData.solved > 0 ? Math.round((localData.correct / localData.solved) * 100) : 0;
+            document.getElementById('statAcc').innerText = `${acc}%`;
+            document.getElementById('statBm').innerText = `${localData.bookmarks.length}개`;
+            document.getElementById('statWrong').innerText = `${localData.wrong.length}개`;
+        }
+
+        function resetData() {
+            if(confirm("모든 학습 기록과 북마크를 초기화하시겠습니까?")) {
+                localData = { bookmarks: [], wrong: [], solved: 0, correct: 0 };
+                saveLocal();
+                renderReport();
+                renderNote();
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        }
+
+        /* 터치 스와이프 지원 */
+        let touchX = 0;
+        document.addEventListener('touchstart', e => touchX = e.changedTouches[0].screenX);
+        document.addEventListener('touchend', e => {
+            const diff = e.changedTouches[0].screenX - touchX;
+            if (Math.abs(diff) > 50) moveCard(activeTab, diff < 0 ? 1 : -1);
+        });
+
+        /* 키보드 단축키 지원 */
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight') moveCard(activeTab, 1);
+            if (e.key === 'ArrowLeft') moveCard(activeTab, -1);
+            if (e.key === ' ') { e.preventDefault(); playTTS(activeTab); }
+        });
+
+        render();
+    </script>
+</body>
+</html>
