@@ -1,6 +1,11 @@
 window.PORTFOLIO_DATA = {
   experience: [],
-  certifications: [],
+  certifications: [
+    {
+      name: "코딩 3등급",
+      date: ""
+    }
+  ],
   awards: [],
   projects: [
     {
