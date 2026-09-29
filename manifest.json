@@ -1,0 +1,12 @@
+{
+  "name": "jakekim-7 Portfolio",
+  "short_name": "JK Portfolio",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "description": "jakekim-7 개인 포트폴리오",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
