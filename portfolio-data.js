@@ -34,6 +34,15 @@ window.PORTFOLIO_DATA = {
       repo: "https://github.com/jakekim-7/eng",
       demo: "https://jakekim-7.github.io/eng/",
       files: "https://github.com/jakekim-7/eng/tree/main/projects/english-master"
+    },
+    {
+      title: "포모도로 공부법 앱",
+      category: "WEB",
+      description: "집중 시간과 휴식 시간을 반복하며 공부할 수 있는 포모도로 타이머 앱. 공부 목록과 학습 기록도 저장할 수 있습니다.",
+      tech: ["HTML", "CSS", "JavaScript", "localStorage"],
+      repo: "https://github.com/jakekim-7/podo",
+      demo: "",
+      files: "https://github.com/jakekim-7/podo"
     }
   ]
 };
