@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#07111f">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <meta name="description" content="jakekim-7 개인 포트폴리오 - 프로젝트, 학습 앱, 게임 제작">
 <title>jakekim-7 | Portfolio</title>
 <style>
@@ -20,7 +23,7 @@ footer{padding:45px 0 65px;color:var(--muted);font-size:13px}.small{font-size:12
 <header><div class="wrap nav"><a class="brand" href="#">J<span>K</span> · Portfolio</a><nav><a href="#about">소개</a><a href="#projects">프로젝트</a><a href="#study">학습</a><a href="#credentials">자격·수상</a><a href="#contact">연락</a></nav></div></header>
 <main>
 <div class="wrap hero">
-<div><div class="eyebrow">PERSONAL PORTFOLIO · 2026</div><h1>직접 만들고<br>계속 개선합니다.</h1><p>엔트리 게임부터 웹앱과 공부 도구까지, 아이디어를 직접 구현하고 프로젝트로 기록하는 포트폴리오입니다.</p><div class="actions"><a class="btn primary" href="#projects">프로젝트 보기</a><a class="btn" href="#study">공부 프로젝트 보기</a></div></div>
+<div><div class="eyebrow">PERSONAL PORTFOLIO · 2026</div><h1>직접 만들고<br>계속 개선합니다.</h1><p>엔트리 게임부터 웹앱과 공부 도구까지, 아이디어를 직접 구현하고 프로젝트로 기록하는 포트폴리오입니다.</p><div class="actions"><a class="btn primary" href="#projects">프로젝트 보기</a><a class="btn" href="#study">공부 프로젝트 보기</a><button class="btn" id="installBtn" hidden>📥 바탕화면에 앱 설치</button></div></div>
 <div class="profile"><span class="small">PROFILE</span><strong>jakekim-7</strong><p>Developer · Creator · Student</p><p>게임 제작, 웹 개발, 학습용 앱 제작을 중심으로 새로운 아이디어를 직접 구현합니다.</p></div>
 </div>
 
@@ -34,7 +37,7 @@ footer{padding:45px 0 65px;color:var(--muted);font-size:13px}.small{font-size:12
 
 <section id="contact"><div class="wrap"><div class="section-head"><h2>연락</h2><p>CONTACT</p></div><div class="card"><h3>GitHub</h3><p>프로젝트와 소스코드는 GitHub에서 계속 업데이트합니다.</p><a class="btn primary" href="https://github.com/jakekim-7" target="_blank" rel="noreferrer">GitHub 방문</a></div></div></section>
 </main>
-<footer><div class="wrap">© 2026 jakekim-7 · 계속 만들고 기록합니다.</div></footer>
+<footer><div class="wrap">© 2026 jakekim-7 · 계속 만들고 기록합니다.<br><span class="small">💻 Chrome/Edge에서는 “바탕화면에 앱 설치” 버튼으로 포트폴리오를 앱처럼 설치할 수 있습니다.</span></div></footer>
 <script src="portfolio-data.js"></script>
 <script>
 const data=window.PORTFOLIO_DATA;
@@ -43,6 +46,7 @@ function link(url,label){return url?'<a class="btn" href="'+esc(url)+'" target="
 document.getElementById("projectGrid").innerHTML=data.projects.length?data.projects.map(x=>'<article class="card"><span class="tag">'+esc(x.category)+'</span><h3>'+esc(x.title)+'</h3><p>'+esc(x.description)+'</p><div>'+((x.tech||[]).map(t=>'<span class="tag">'+esc(t)+'</span>').join(""))+'</div><div class="actions">'+link(x.demo,"실행 보기")+link(x.repo,"GitHub")+link(x.files,"프로젝트 파일")+"</div></article>").join(""):'<div class="empty">아직 등록된 프로젝트가 없습니다.</div>';
 document.getElementById("certList").innerHTML=data.certifications.length?data.certifications.map(x=>'<div class="card"><h3>'+esc(x.name)+'</h3><p class="meta">'+esc(x.date)+'</p></div>').join(""):'<div class="empty">자격증 정보를 추가해주세요.</div>';
 document.getElementById("awardList").innerHTML=data.awards.length?data.awards.map(x=>'<div class="card"><h3>'+esc(x.name)+'</h3><p class="meta">'+esc(x.date)+" · "+esc(x.organization)+"</p></div>").join(""):'<div class="empty">수상경력 정보를 추가해주세요.</div>';
+const installBtn=document.getElementById("installBtn");let deferredPrompt=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false});installBtn?.addEventListener("click",async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});window.addEventListener("appinstalled",()=>{installBtn.hidden=true});if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 </body>
 </html>
